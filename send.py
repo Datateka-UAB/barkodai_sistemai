@@ -1,6 +1,7 @@
 import requests
 import time
 import os
+import getpass
 
 requests.packages.urllib3.disable_warnings() 
 
@@ -28,7 +29,7 @@ pause = 3
 while True:
     time.sleep(pause)
     os.system('cls' if os.name == 'nt' else 'clear')
-    user_qr_code = input(login_name) #get encoded string
+    user_qr_code = getpass.getpass(login_name)
 
 
     #test login
