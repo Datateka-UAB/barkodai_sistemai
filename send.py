@@ -4,15 +4,21 @@ import os
 
 requests.packages.urllib3.disable_warnings() 
 
+
+
 login_url = "https://elga.proman.app/api/login_check"
+
+
+
 login_name = "Prisijungimas, skanuokite QR kodą ⮕ "
-login_separator = "_"
+login_separator = "EE3ii2joP5"
 bad_login = "Netinkamas prisijungimas"
 no_user = "Vartotojas nerastas"
 
+
+
 scan_operation = "Skanuokite operaciją ⮕ "
 scaned = "Nuskanuota"
-
 error = "Klaida"
 
 pause = 3
@@ -20,8 +26,9 @@ pause = 3
 
 
 while True:
+    time.sleep(pause)
     os.system('cls' if os.name == 'nt' else 'clear')
-    user_qr_code = input(login_name)
+    user_qr_code = input(login_name) #get encoded string
 
 
     #test login
@@ -62,10 +69,6 @@ while True:
         print(scaned)
     except:
         print(error)
-
-
-
-    time.sleep(pause)
 
 
 
