@@ -1,7 +1,7 @@
 import requests
 import time
 import os
-import getpass
+#import getpass
 
 requests.packages.urllib3.disable_warnings() 
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     ### 
     login_url = "https://elga.proman.app/api/login_check"
-    login_separator = "EE3ii2joP5"
+#    login_separator = "EE3ii2joP5"
 
 
 
@@ -49,12 +49,14 @@ if __name__ == "__main__":
     while True:
         time.sleep(pause)
         os.system('cls' if os.name == 'nt' else 'clear')
-        user_qr_code = lt_to_en_keyboard(getpass.getpass(login_name))
+        #user_qr_code = lt_to_en_keyboard(getpass.getpass(login_name))
+        user_token = lt_to_en_keyboard(input(login_name))
 
 
         #test login
         try:
-            login_payload = {'username': user_qr_code.split(login_separator)[0],'password':user_qr_code.split(login_separator)[1]}
+            #login_payload = {'username': user_qr_code.split(login_separator)[0],'password':user_qr_code.split(login_separator)[1]}
+            login_payload = {'token': user_token}
         except:
             print(bad_login)
             continue
