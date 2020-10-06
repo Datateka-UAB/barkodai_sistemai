@@ -33,65 +33,73 @@ if __name__ == "__main__":
 
 
 
-    login_name = "Prisijungimas, skanuokite QR kodą ⮕ "
-    bad_login = "Netinkamas prisijungimas"
-    no_user = "Vartotojas nerastas"
+    scan_string = "\n Skanuokite QR kodą arba pridėkite prisijungimo kortelę ⮕ "
+    bad_login = "\n Netinkamas prisijungimas"
+    no_user = "\n Vartotojas nerastas"
 
 
-    scan_operation = "Skanuokite operaciją ⮕ "
-    scaned = "Nuskanuota"
-    error = "Klaida"
+    scaned = "\n Nuskanuota"
+    error = "\n Klaida"
 
     pause = 2
 
 
 
+
+    login = False
+
+
     while True:
-        time.sleep(pause)
+
         os.system('cls' if os.name == 'nt' else 'clear')
         #user_qr_code = lt_to_en_keyboard(getpass.getpass(login_name))
-        user_token = lt_to_en_keyboard(input(login_name))
+        if login:
+            print("\n " + person["name"])
+        scan_code = lt_to_en_keyboard(input(scan_string))
 
 
         #test login
-        try:
-            #login_payload = {'username': user_qr_code.split(login_separator)[0],'password':user_qr_code.split(login_separator)[1]}
-            login_payload = {'token': user_token}
-        except:
-            print(bad_login)
-            continue
+        if login == False or "http" not in scan_code:
+            #test login
+            try:
+                #login_payload = {'username': user_qr_code.split(login_separator)[0],'password':user_qr_code.split(login_separator)[1]}
+                login_payload = {'token': scan_code}
+            except:
+                print(bad_login)
+                time.sleep(pause)
+                continue
+
+            #login to proman
+            try:
+                response = requests.request("POST", login_url, data = login_payload, verify=False)
+                person = response.json()["person"]
+                token = response.json()["token"]
+                login = True #set login  to true
+                print()
+                print(person["name"])
+                print()
+            except:
+                print(no_user)
+                time.sleep(pause)
+                continue
 
 
-        #login to proman
-        try:
-            response = requests.request("POST", login_url, data = login_payload, verify=False)
-            person = response.json()["person"]
-            token = response.json()["token"]
-            print()
-            print(person["firstName"]+"  " + person["lastName"])
-            print()
-        except:
-            print(no_user)
-            continue
 
 
+        else:
 
+            action_headers = {
+                'Authorization': token
+            }
 
-
-        #get operation
-        action_url = lt_to_en_keyboard(input(scan_operation))
-
-        action_headers = {
-            'Authorization': token
-        }
-
-        #send operation
-        try:
-            response = requests.request("GET", action_url, headers=action_headers, verify=False)
-            response.json()["status"]
-            print(scaned)
-        except:
-            print(error)
+            #send operation
+            try:
+                response = requests.request("GET", scan_code, headers=action_headers, verify=False)
+                response.json()["status"]
+                print(scaned)
+            except:
+                print(error)
+                time.sleep(pause)
 
 
 
